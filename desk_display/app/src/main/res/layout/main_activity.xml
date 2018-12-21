@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme"
+    android:orientation="horizontal"
+    xmlns:deskdisplay="http://schemas.android.com/apk/com.nathanmorin.deskdisplay.views">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight=".4"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weekday"
+            android:gravity="center_horizontal"
+            android:textSize="30sp"
+            android:textFontWeight="400"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:textColor="@android:color/white"
+            android:id="@+id/tv_weekday"
+            android:includeFontPadding="false"/>
+
+        <TextView
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:gravity="center_horizontal"
+            android:textSize="60sp"
+            android:textFontWeight="1000"
+            android:textColor="@android:color/white"
+            android:id="@+id/tv_day"
+            android:includeFontPadding="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Month 2000"
+            android:gravity="center_horizontal"
+            android:textSize="25sp"
+            android:textFontWeight="0"
+            android:textColor="@android:color/white"
+            android:id="@+id/tv_month_year"
+            android:includeFontPadding="false"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"/>
+
+        <com.nathanmorin.deskdisplay.views.CalendarView
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            deskdisplay:primaryColor="@android:color/white"
+            deskdisplay:accentColor="@android:color/holo_red_dark"
+            />
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_weight=".8"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_gravity="bottom">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/today_weather_group"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/wi_day_snow"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/iv_weather_icon"/>
+
+            <TextView
+                android:id="@+id/tv_temperature"
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:includeFontPadding="false"
+                android:textAlignment="gravity"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:text="-459.67°"
+                android:autoSizeTextType="uniform"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/iv_weather_icon" />
+
+            <TextView
+                android:id="@+id/tv_weather_description"
+                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:includeFontPadding="false"
+                android:autoSizeTextType="uniform"
+                android:padding="0dp"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeStepGranularity="1sp"
+                android:textAlignment="gravity"
+                android:gravity="left"
+                android:text="None xsdfnsfd sdf  sd ffsdfsdf sd sd s ds d f d sdf sdf sdf s sd fsd ds f d sdf sf sf sdf d f fs"
+                app:layout_constraintLeft_toRightOf="@+id/tv_temperature"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constrainedWidth="true" />
+        </android.support.constraint.ConstraintLayout>
+
+        <com.nathanmorin.deskdisplay.views.WeatherForcastView
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:id="@+id/weatherForcastView"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            app:layout_constraintTop_toBottomOf="@+id/today_weather_group"
+
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
