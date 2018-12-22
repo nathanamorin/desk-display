@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
 
     private GestureDetectorCompat mDetector;
     private BluetoothAdapter mBluetoothAdapter;
+    float displayBrightness = 0.1f;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -113,7 +114,7 @@ public class MainActivity extends Activity {
     public void displayOn(){
         Window window = getWindow();
         WindowManager.LayoutParams layoutpars = window.getAttributes();
-        layoutpars.screenBrightness = 0.1f;
+        layoutpars.screenBrightness = displayBrightness;
         window.setAttributes(layoutpars);
     }
 
@@ -122,6 +123,11 @@ public class MainActivity extends Activity {
         WindowManager.LayoutParams layoutpars = window.getAttributes();
         layoutpars.screenBrightness = 0;
         window.setAttributes(layoutpars);
+    }
+
+    public void setDisplayBrightness(float brightness) {
+        displayBrightness = brightness;
+        displayOn();
     }
 
     private void updateView(){
@@ -173,7 +179,14 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        this.mDetector.onTouchEvent(event);
+        if (event.getPointerCount() == 2) {
+            float input = Math.min(Math.max(event.getY(), 100), 400);
+            float brightness = Math.abs((input - 100f) / 300f - 1f);
+            setDisplayBrightness(brightness);
+        } else {
+            this.mDetector.onTouchEvent(event);
+        }
+
         return super.onTouchEvent(event);
     }
 
@@ -191,5 +204,10 @@ public class MainActivity extends Activity {
 
         }
 
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d("Action", "longpress");
+            super.onLongPress(e);
+        }
     }
 }
