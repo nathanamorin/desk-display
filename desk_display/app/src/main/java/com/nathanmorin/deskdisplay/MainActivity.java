@@ -26,6 +26,7 @@ import com.nathanmorin.deskdisplay.data.WeatherInterface;
 import com.nathanmorin.deskdisplay.views.CalendarView;
 import com.nathanmorin.deskdisplay.views.WeatherForcastView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.concurrent.Executors;
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
     TextView tv_month_year;
     TextView tv_weather_description;
     TextView tv_temperature;
+    TextView tv_time;
     ImageView iv_weather_icon;
     CalendarView calendarView;
     Handler uiUpdateHandler = new Handler();
@@ -76,9 +78,11 @@ public class MainActivity extends Activity {
         tv_weekday = findViewById(R.id.tv_weekday);
         tv_day = findViewById(R.id.tv_day);
         tv_month_year = findViewById(R.id.tv_month_year);
+
         iv_weather_icon = findViewById(R.id.iv_weather_icon);
         tv_weather_description = findViewById(R.id.tv_weather_description);
         tv_temperature = findViewById(R.id.tv_temperature);
+        tv_time = findViewById(R.id.tv_time);
         weatherInterface = new WeatherInterface(getApplicationContext());
         calendarView = findViewById(R.id.calendarView);
         weatherForcastView = findViewById(R.id.weatherForcastView);
@@ -137,6 +141,9 @@ public class MainActivity extends Activity {
         String weekday = mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Config.locale);
         String day = Integer.toString(mCalendar.get(Calendar.DAY_OF_MONTH));
 
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a", Config.locale);
+        timeFormat.setTimeZone(Config.tz);
+
         uiUpdateHandler.post(() -> {
             tv_weekday.setText(weekday);
             tv_day.setText(day);
@@ -152,6 +159,7 @@ public class MainActivity extends Activity {
                 int resourceId = getResources().getIdentifier(currentWeather.get().getIcon(),"drawable", getPackageName());
                 Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), resourceId);
                 iv_weather_icon.setImageDrawable(drawable);
+                tv_time.setText(timeFormat.format(mCalendar.getTime()));
             }
 
             weatherInterface.getForcast().ifPresent(weatherForcastView::updateForcast);
