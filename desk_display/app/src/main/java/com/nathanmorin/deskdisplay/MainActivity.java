@@ -2,11 +2,9 @@ package com.nathanmorin.deskdisplay;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,26 +89,26 @@ public class MainActivity extends Activity {
 
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
         executor.scheduleAtFixedRate(this::updateView, 0,100, TimeUnit.MILLISECONDS);
-        executor.scheduleAtFixedRate(this::updateWeather, 0,1, TimeUnit.HOURS);
+        executor.scheduleAtFixedRate(this::updateWeather, 0,10, TimeUnit.SECONDS);
 //        executor.execute(this::scanBluetooth);
 
 
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        Log.d("BluetoothEnabled", Boolean.toString(mBluetoothAdapter.isEnabled()));
-
-        if (mBluetoothAdapter.isDiscovering()) {
-            mBluetoothAdapter.cancelDiscovery();
-        }
-//        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-//        startActivity(discoverableIntent);
-
-        registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-
-        mBluetoothAdapter.startDiscovery();
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//
+//        Log.d("BluetoothEnabled", Boolean.toString(mBluetoothAdapter.isEnabled()));
+//
+//        if (mBluetoothAdapter.isDiscovering()) {
+//            mBluetoothAdapter.cancelDiscovery();
+//        }
+////        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+////        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+////        startActivity(discoverableIntent);
+//
+//        registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+//
+//        mBluetoothAdapter.startDiscovery();
 
         displayOn();
     }
@@ -148,7 +146,7 @@ public class MainActivity extends Activity {
             tv_weekday.setText(weekday);
             tv_day.setText(day);
             tv_month_year.setText(month + " " + year);
-
+            tv_time.setText(timeFormat.format(mCalendar.getTime()));
             calendarView.refreshDay();
 
             Optional<DayWeather> currentWeather = weatherInterface.getCurrentWeather();
@@ -159,7 +157,6 @@ public class MainActivity extends Activity {
                 int resourceId = getResources().getIdentifier(currentWeather.get().getIcon(),"drawable", getPackageName());
                 Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), resourceId);
                 iv_weather_icon.setImageDrawable(drawable);
-                tv_time.setText(timeFormat.format(mCalendar.getTime()));
             }
 
             weatherInterface.getForcast().ifPresent(weatherForcastView::updateForcast);

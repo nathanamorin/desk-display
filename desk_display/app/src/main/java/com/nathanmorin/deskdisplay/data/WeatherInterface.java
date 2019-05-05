@@ -1,6 +1,7 @@
 package com.nathanmorin.deskdisplay.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +39,10 @@ public class WeatherInterface {
     private HashMap<String,String> openWeatherMapConversions;
     private Optional<DayWeather> currentWeather = Optional.empty();
     private Optional<ForcastWeather> forcast = Optional.empty();
+
+    private long lastUpdate = -1;
+    private boolean updating = false;
+    private int upatePeriod = 60 * 60;
 
     public WeatherInterface(Context context){
         openWeatherMapConversions = new HashMap<>();
@@ -77,8 +82,7 @@ public class WeatherInterface {
         }
     }
 
-
-    public void updateWeather() throws WeatherFetchException {
+    private void fetchNewWeatherDate() throws WeatherFetchException {
 
         //Update current weather from OpenWeatherMap
         JsonNode rawWeatherOpenWeatherMap;
@@ -107,7 +111,8 @@ public class WeatherInterface {
                 rawWeatherOpenWeatherMap.get("main").get("temp_min").asDouble(0),
                 rawWeatherOpenWeatherMap.get("main").get("temp_max").asDouble(0),
                 new Date(1000 * (long)rawWeatherOpenWeatherMap.get("sys").get("sunrise").asInt(0)),
-                new Date(1000 * (long)rawWeatherOpenWeatherMap.get("sys").get("sunset").asInt(0))
+                new Date(1000 * (long)rawWeatherOpenWeatherMap.get("sys").get("sunset").asInt(0)),
+                -1
 
         ));
 
@@ -136,6 +141,7 @@ public class WeatherInterface {
             Double tempMax = prediction.get("main").get("temp_max").asDouble(-1000);
             Double tempMin = prediction.get("main").get("temp_min").asDouble(-1000);
             DayWeather weather;
+            Log.d("WeatherInterfacePre", date.getTime().toString() + "  " + Integer.toString(dayNum));
             if (days.containsKey(dayNum)) {
                 weather = days.get(dayNum);
 
@@ -154,12 +160,34 @@ public class WeatherInterface {
                         tempMin,
                         tempMax,
                         null,
-                        null);
+                        null,
+                        dayNum);
             }
             days.put(dayNum,weather);
         });
 
-        forcast = Optional.of(new ForcastWeather(days.values().toArray(new DayWeather[0])));
+        days.entrySet().forEach(x -> Log.d("WeatherInterface", x.getValue().getDate().toString() + "  "  + Integer.toString(x.getKey())));
+
+        forcast = Optional.of(new ForcastWeather(days.values().stream().sorted().toArray(DayWeather[]::new)));
+
+    }
+
+
+    public void updateWeather() throws WeatherFetchException {
+
+        if (updating) return;
+
+        if (new Date().getTime() - lastUpdate < upatePeriod) return;
+
+        updating = true;
+        try{
+            fetchNewWeatherDate();
+            lastUpdate = new Date().getTime();
+        } finally {
+            updating = false;
+        }
+
+
     }
 
 

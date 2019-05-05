@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.nathanmorin.deskdisplay.Config;
@@ -158,6 +159,7 @@ public class WeatherForcastView extends View {
         ScaledTemp scaleTemp = (Double x) -> (int) Math.round((((graphHeight - textSizePadded*2) * (x - totalMin)) / (totalMax - totalMin)) + textSizePadded);
         //Draw Graph
         for (int pos = 0; pos < days.length-1; pos++) {
+            Log.d("WeatherForcastView", days[pos].getDate().toString());
             drawTempGraph(canvas, weatherForcastPaint,
                          pos, days.length, this.getMeasuredWidth(),
                          days[pos],

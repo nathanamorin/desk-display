@@ -2,7 +2,7 @@ package com.nathanmorin.deskdisplay.data;
 
 import java.util.Date;
 
-public class DayWeather {
+public class DayWeather implements Comparable<DayWeather> {
     /**
      * DayWeather object holding a given day's weather
      */
@@ -14,10 +14,11 @@ public class DayWeather {
     private Double temperatureMin;
     private Date sunrise;
     private Date sunset;
+    private int dayOfYear;
 
     public DayWeather(Date date, String icon, String description,
                       Double temperature, Double temperatureMin, Double temperatureMax,
-                      Date sunrise, Date sunset) {
+                      Date sunrise, Date sunset, int dayOfYear) {
         this.date = date;
         this.icon = icon;
         this.description = description;
@@ -26,6 +27,7 @@ public class DayWeather {
         this.temperatureMax = temperatureMax;
         this.sunrise = sunrise;
         this.sunset = sunset;
+        this.dayOfYear = dayOfYear;
     }
 
     public Date getDate() {
@@ -77,5 +79,10 @@ public class DayWeather {
 
     public void setTemperatureMin(Double temperatureMin) {
         this.temperatureMin = temperatureMin;
+    }
+
+    @Override
+    public int compareTo(DayWeather dayWeather) {
+        return Integer.compare(this.dayOfYear, dayWeather.dayOfYear);
     }
 }
