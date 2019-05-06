@@ -42,7 +42,7 @@ public class WeatherInterface {
 
     private long lastUpdate = -1;
     private boolean updating = false;
-    private int upatePeriod = 60 * 60;
+    private int upatePeriodMilliseconds = 60 * 60 * 1000;
 
     public WeatherInterface(Context context){
         openWeatherMapConversions = new HashMap<>();
@@ -177,7 +177,7 @@ public class WeatherInterface {
 
         if (updating) return;
 
-        if (new Date().getTime() - lastUpdate < upatePeriod) return;
+        if (new Date().getTime() - lastUpdate < upatePeriodMilliseconds) return;
 
         updating = true;
         try{
