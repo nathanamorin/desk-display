@@ -159,7 +159,6 @@ public class WeatherForcastView extends View {
         ScaledTemp scaleTemp = (Double x) -> (int) Math.round((((graphHeight - textSizePadded*2) * (x - totalMin)) / (totalMax - totalMin)) + textSizePadded);
         //Draw Graph
         for (int pos = 0; pos < days.length-1; pos++) {
-            Log.d("WeatherForcastView", days[pos].getDate().toString());
             drawTempGraph(canvas, weatherForcastPaint,
                          pos, days.length, this.getMeasuredWidth(),
                          days[pos],

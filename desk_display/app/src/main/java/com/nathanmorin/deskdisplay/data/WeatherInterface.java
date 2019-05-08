@@ -42,7 +42,7 @@ public class WeatherInterface {
 
     private long lastUpdate = -1;
     private boolean updating = false;
-    private int upatePeriodMilliseconds = 60 * 60 * 1000;
+    private int updatePeriodMilliseconds = 60 * 60 * 1000;
 
     public WeatherInterface(Context context){
         openWeatherMapConversions = new HashMap<>();
@@ -141,7 +141,6 @@ public class WeatherInterface {
             Double tempMax = prediction.get("main").get("temp_max").asDouble(-1000);
             Double tempMin = prediction.get("main").get("temp_min").asDouble(-1000);
             DayWeather weather;
-            Log.d("WeatherInterfacePre", date.getTime().toString() + "  " + Integer.toString(dayNum));
             if (days.containsKey(dayNum)) {
                 weather = days.get(dayNum);
 
@@ -166,8 +165,6 @@ public class WeatherInterface {
             days.put(dayNum,weather);
         });
 
-        days.entrySet().forEach(x -> Log.d("WeatherInterface", x.getValue().getDate().toString() + "  "  + Integer.toString(x.getKey())));
-
         forcast = Optional.of(new ForcastWeather(days.values().stream().sorted().toArray(DayWeather[]::new)));
 
     }
@@ -177,10 +174,11 @@ public class WeatherInterface {
 
         if (updating) return;
 
-        if (new Date().getTime() - lastUpdate < upatePeriodMilliseconds) return;
+        if (new Date().getTime() - lastUpdate < updatePeriodMilliseconds) return;
 
         updating = true;
         try{
+            Log.d("WeatherInterface", "Updating");
             fetchNewWeatherDate();
             lastUpdate = new Date().getTime();
         } finally {
