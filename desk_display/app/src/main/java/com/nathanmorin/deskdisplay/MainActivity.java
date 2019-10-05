@@ -184,10 +184,17 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
+        Log.d("Touch Event", Integer.toString(event.getPointerCount()));
         if (event.getPointerCount() == 2) {
             float input = Math.min(Math.max(event.getY(), 100), 400);
             float brightness = Math.abs((input - 100f) / 300f - 1f);
             setDisplayBrightness(brightness);
+        } else if (event.getPointerCount() == 3) {
+            Log.d("Launch Activity", "start");
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName("com.android.iotlauncher.ota", "com.google.android.things.iotlauncher.app.DefaultIoTLauncher");
+            startActivity(intent);
+            finish();
         } else {
             this.mDetector.onTouchEvent(event);
         }
